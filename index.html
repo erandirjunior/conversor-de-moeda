@@ -1,33 +1,40 @@
-<!doctype html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Conversor de Moeda</title>
-</head>
+<!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <title>Conversor de moeda</title>
+            <link rel="stylesheet" href="style.css">
+        </head>
 <body>
-<div>
-
-    <div data-js="error"></div>
-    <form method="post" data-js="form">
+<header class="header">
+    <h1>Conversor de moeda Online</h1>
+</header>
+<div class="content">
+    <div class="message">Converta Valores</div>
+    <form action="get" class="form" data-js="form">
+        <label for="valor">Valor</label>
         <input type="text" name="valor" data-js="valor" placeholder="Digite o valor a ser convertido" required>
+
+        <label for="moeda">Moeda</label>
         <select name="moeda" data-js="moeda" required>
             <option value="" selected>Selecione...</option>
-            <option value="1">Dólar</option>
-            <option value="2">Real</option>
+            <option value="1">Para Dólar</option>
+            <option value="2">Para Real</option>
         </select>
-        <input type="text" name="result" data-js="retorno">
-        <input type="submit" name="enviar" value="Enviar">
+
+        <button class="btn-entrar" type="submit">Converter</button>
+
+        <label for="retorno">Resultado</label>
+        <input type="text" name="retorno" data-js="retorno">
     </form>
 </div>
 </body>
 <script>
-    (function () {
+    (function() {
         let $form = document.querySelector('[data-js="form"]');
 
         function getDolar() {
+            // retorna uma promise com os valores do json
             return fetch('http://economia.awesomeapi.com.br/USD-BRL/1', {
                 method: 'get'
             });
@@ -38,13 +45,14 @@
 
             let valorDolar = getDolar();
 
-            valorDolar.then(response => response.json()) // retorna uma promise
+                //converte os retorno da requisição para json
+            valorDolar.then(response => response.json())
                 .then(result => {
                     let $valor = document.querySelector('[data-js="valor"]');
                     let $resultado = document.querySelector('[data-js="retorno"]');
                     let $moeda = document.querySelector('[data-js="moeda"]');
 
-                    if ($moeda.value == 1) {
+                    if ($moeda.value == 2) {
                         $resultado.value = result[0].bid * $valor.value;
                     } else {
                         $resultado.value =   $valor.value / result[0].bid;
@@ -53,7 +61,7 @@
                 .catch(function(err) {
                     console.error(err);
                 });
-        })
+        });
     })();
 </script>
 </html>
